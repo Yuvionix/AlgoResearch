@@ -46,7 +46,7 @@ DEBUG = os.getenv("FLASK_DEBUG", "").lower() in {"1", "true", "yes"}
 AUTH_ENABLED = os.getenv("AUTH_ENABLED", "").lower() in {"1", "true", "yes"}
 SECRET_KEY = os.getenv("SECRET_KEY", "change-me-in-production")
 AUTH_USERNAME = os.getenv("AUTH_USERNAME", "researcher")
-AUTH_PASSWORD = os.getenv("AUTH_PASSWORD", "researcher-local")
+AUTH_PASSWORD = os.getenv("AUTH_PASSWORD", "")
 ALLOWED_EXTENSIONS = {".csv"}
 ALLOWED_CSV_MIME = {
     "text/csv",

@@ -13,8 +13,15 @@ import Compare from "./pages/Compare";
 import Workspace from "./pages/Workspace";
 import Runs from "./pages/Runs";
 import DataQuality from "./pages/DataQuality";
+import Login from "./pages/Login";
+import { getAuthState } from "./api/client";
+import { useEffect, useState } from "react";
 
 export default function App() {
+  const [authState, setAuthState] = useState<boolean | null>(null);
+  useEffect(() => { getAuthState().then((data) => setAuthState(data.authenticated)).catch(() => setAuthState(false)); }, []);
+  if (authState === null) return <div className="loading-screen">Loading workspace...</div>;
+  if (!authState) return <Login onSuccess={() => setAuthState(true)} />;
   return (
     <Routes>
       <Route element={<MarketingFrame />}>
@@ -23,7 +30,7 @@ export default function App() {
         <Route path="/methodology" element={<Methodology />} />
         <Route path="/disclaimer" element={<Disclaimer />} />
       </Route>
-      <Route path="/app" element={<AppShell />}>
+      <Route path="/app" element={<AppShell onLogout={() => setAuthState(false)} />}>
         <Route index element={<Dashboard />} />
         <Route path="market" element={<Market />} />
         <Route path="scanner" element={<Scanner />} />

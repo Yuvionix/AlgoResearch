@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
+import { logout } from "../api/client";
 
 const links = [
   ["Dashboard", "/app"],
@@ -11,7 +12,14 @@ const links = [
   ["Research runs", "/app/runs"],
 ];
 
-export default function AppShell() {
+type AppShellProps = { onLogout: () => void };
+
+export default function AppShell({ onLogout }: AppShellProps) {
+  async function signOut() {
+    await logout();
+    onLogout();
+  }
+
   return (
     <>
       <header className="topbar">
@@ -19,7 +27,7 @@ export default function AppShell() {
           <strong>AlgoResearch</strong>
           <span>Research workspace</span>
         </NavLink>
-        <div className="sub">Not a broker · Not live trading · Not investment advice</div>
+        <div className="shell-actions"><div className="sub">Not a broker · Not live trading · Not investment advice</div><button className="btn secondary" onClick={signOut}>Sign out</button></div>
       </header>
       <div className="layout">
         <aside className="sidenav">

@@ -47,6 +47,10 @@ export async function login(username: string, password: string) {
   return (await api.post("/auth/login", { username, password })).data;
 }
 
+export async function logout() {
+  return (await api.post("/auth/logout")).data;
+}
+
 export async function compareRuns(datasets: string[]) {
   return (await api.post("/backtest/compare", { datasets })).data;
 }
@@ -77,4 +81,11 @@ export type ResearchRun = {
   data_source: string;
   result_summary: Record<string, unknown>;
   details?: Record<string, unknown>;
+};
+
+export type DashboardSummary = {
+  research_run_count: number;
+  latest_runs: ResearchRun[];
+  latest_market: ResearchRun | null;
+  latest_scan: ResearchRun | null;
 };

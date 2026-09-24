@@ -23,6 +23,13 @@ def create_app() -> Flask:
     app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH
     CORS(app, origins=CORS_ORIGINS, supports_credentials=False)
 
+    @app.after_request
+    def security_headers(response):
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        response.headers.setdefault("X-Frame-Options", "DENY")
+        response.headers.setdefault("Referrer-Policy", "same-origin")
+        return response
+
     app.register_blueprint(health_bp, url_prefix="/api")
     app.register_blueprint(market_bp, url_prefix="/api")
     app.register_blueprint(scanner_bp, url_prefix="/api")

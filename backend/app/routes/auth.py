@@ -5,7 +5,7 @@ from hmac import compare_digest
 
 from flask import Blueprint, jsonify, request, session
 
-from app.config import AUTH_ENABLED, AUTH_PASSWORD, AUTH_USERNAME
+from app.config import AUTH_ENABLED, AUTH_PASSWORD, AUTH_USERNAME, SECRET_KEY
 
 bp = Blueprint("auth", __name__)
 
@@ -22,6 +22,8 @@ def auth_required(view):
 
 @bp.post("/auth/login")
 def login():
+    if AUTH_ENABLED and (SECRET_KEY == "change-me-in-production" or not AUTH_PASSWORD):
+        return jsonify({"error": "auth_misconfigured", "message": "Authentication is not configured securely."}), 503
     payload = request.get_json(silent=True) or {}
     username = str(payload.get("username") or "")
     password = str(payload.get("password") or "")

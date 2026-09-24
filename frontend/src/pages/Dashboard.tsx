@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getDashboard } from "../api/client";
+import type { DashboardSummary } from "../api/client";
 import Page from "./_Page";
 
 export default function Dashboard() {
-  const [summary, setSummary] = useState<any>(null);
+  const [summary, setSummary] = useState<DashboardSummary | null>(null);
   useEffect(() => { getDashboard().then(setSummary).catch(() => undefined); }, []);
   return (
     <Page kicker="Workspace overview" title="Research dashboard" lede="A starting point for moving from market context to a documented result.">
