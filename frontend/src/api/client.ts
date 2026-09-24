@@ -5,6 +5,55 @@ export const api = axios.create({
   timeout: 120000,
 });
 
+export async function getDashboard() {
+  return (await api.get("/dashboard")).data;
+}
+
+export async function classifyMarket(payload: {
+  instrument: string;
+  source: string;
+  period: string;
+  lookback: number;
+}) {
+  return (await api.post("/market/classify", payload)).data;
+}
+
+export async function runScanner(payload: { source: string; lookback_days: number }) {
+  return (await api.post("/scanner/run", payload)).data;
+}
+
+export async function analyzeTrades(file: File, initialCapital: number) {
+  const form = new FormData();
+  form.append("file", file);
+  form.append("initial_capital", String(initialCapital));
+  return (await api.post("/backtest/analyze-csv", form)).data;
+}
+
+export async function validateCsv(file: File) {
+  const form = new FormData();
+  form.append("file", file);
+  return (await api.post("/data-quality/validate-csv", form)).data;
+}
+
+export async function getRuns() {
+  return (await api.get("/research-runs")).data;
+}
+
+export async function getSymbolDetail(symbol: string) {
+  return (await api.get(`/scanner/symbol/${encodeURIComponent(symbol)}`, { params: { source: "local" } })).data;
+}
+
+export async function executeWorkspace() {
+  return (await api.post("/workspace/execute", {
+    instrument: "NIFTY",
+    source: "local",
+    lookback: 5,
+    include_scan: false,
+    include_backtest: true,
+    backtest_dataset: "sample",
+  })).data;
+}
+
 export type ResearchRun = {
   run_id: string;
   timestamp: string;

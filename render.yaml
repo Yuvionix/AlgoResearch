@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: algoresearch-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT run:app
+    envVars:
+      - key: ALGORESEARCH_OFFLINE
+        value: "1"
+      - key: CORS_ORIGINS
+        value: https://algoresearch-web.onrender.com
+
+  - type: web
+    name: algoresearch-web
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        value: https://algoresearch-api.onrender.com/api

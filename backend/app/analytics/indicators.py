@@ -18,6 +18,4 @@ def sma(series: pd.Series, window: int) -> pd.Series:
 
 def add_emas(df: pd.DataFrame, fast: int = 20, slow: int = 50) -> pd.DataFrame:
     frame = df.copy()
-    frame["EMA20"] = ema(frame["Close"], fast)
-    frame["EMA50"] = ema(frame["Close"], slow)
-    return frame
+    return frame.assign(EMA20=ema(frame["Close"], fast), EMA50=ema(frame["Close"], slow))

@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, current_app, jsonify, request
 
 from app.providers.csv_provider import CSVProvider
 from app.providers.factory import fetch_with_fallback
@@ -29,7 +29,8 @@ def validate():
         )
         return jsonify(report)
     except Exception as exc:  # noqa: BLE001
-        return jsonify({"error": "validation_failed", "message": str(exc)}), 400
+        current_app.logger.exception("OHLC validation failed", exc_info=exc)
+        return jsonify({"error": "validation_failed", "message": "Unable to validate the requested data."}), 400
 
 
 @bp.post("/data-quality/validate-csv")
@@ -44,4 +45,5 @@ def validate_csv():
     except UploadError as exc:
         return jsonify({"error": "upload_rejected", "message": str(exc)}), 400
     except Exception as exc:  # noqa: BLE001
-        return jsonify({"error": "validation_failed", "message": str(exc)}), 400
+        current_app.logger.exception("CSV validation failed", exc_info=exc)
+        return jsonify({"error": "validation_failed", "message": "Unable to validate the uploaded CSV."}), 400

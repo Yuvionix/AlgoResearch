@@ -33,11 +33,12 @@ def classify_market(
     if len(window) < 3:
         raise ValueError("Insufficient sessions after filtering for classification")
 
-    window = window.copy()
-    window["partition_value"] = partition_series(window)
-    window["body_up"] = window["Close"] > window["Open"]
-    window["body_down"] = window["Close"] < window["Open"]
-    window["close_up"] = window["Close"].diff() > 0
+    window = window.assign(
+        partition_value=partition_series(window),
+        body_up=window["Close"] > window["Open"],
+        body_down=window["Close"] < window["Open"],
+        close_up=window["Close"].diff() > 0,
+    )
 
     last = window.iloc[-1]
     first = window.iloc[0]

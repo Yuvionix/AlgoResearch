@@ -11,9 +11,7 @@ def detect_crossovers(df: pd.DataFrame, fast: int = 20, slow: int = 50) -> pd.Da
     prev_slow = frame["EMA50"].shift(1)
     golden = (prev_fast <= prev_slow) & (frame["EMA20"] > frame["EMA50"])
     death = (prev_fast >= prev_slow) & (frame["EMA20"] < frame["EMA50"])
-    frame["golden_cross"] = golden.fillna(False)
-    frame["death_cross"] = death.fillna(False)
-    return frame
+    return frame.assign(golden_cross=golden.fillna(False), death_cross=death.fillna(False))
 
 
 def latest_crossover(df: pd.DataFrame, kind: str = "golden") -> dict | None:

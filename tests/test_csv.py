@@ -6,6 +6,7 @@ import pytest
 from app.providers.csv_provider import CSVProvider, parse_trades_csv
 from app.providers.local import LocalDatasetProvider
 from app.providers.normalize import normalize_ohlc
+from app import create_app
 
 
 def test_parse_ohlc_csv_bytes():
@@ -52,3 +53,19 @@ def test_local_provider_rejects_symlink_escape(tmp_path):
 
     with pytest.raises(FileNotFoundError):
         provider.fetch_ohlc("LINK")
+
+
+@pytest.mark.parametrize(
+    ("path", "payload"),
+    [
+        ("/api/market/classify", {"lookback": "not-a-number"}),
+        ("/api/market/classify", {"instrument": "../../etc/passwd"}),
+        ("/api/scanner/run", {"lookback_days": 999999}),
+    ],
+)
+def test_invalid_api_parameters_return_bad_request(path, payload, monkeypatch, tmp_path):
+    monkeypatch.setattr("app.config.RUNS_PATH", tmp_path / "runs.json")
+    client = create_app().test_client()
+    response = client.post(path, json=payload)
+    assert response.status_code == 400
+    assert response.get_json()["error"] in {"classification_failed", "scan_failed"}

@@ -34,10 +34,10 @@ def analyze_trades(
     source: str,
 ) -> dict:
     frame = trades.copy()
-    frame["date"] = pd.to_datetime(frame["date"])
+    frame = frame.assign(date=pd.to_datetime(frame["date"]))
     frame = frame.sort_values("date")
-    frame["cumulative_pnl"] = frame["pnl"].cumsum()
-    frame["equity"] = initial_capital + frame["cumulative_pnl"]
+    frame = frame.assign(cumulative_pnl=frame["pnl"].cumsum())
+    frame = frame.assign(equity=initial_capital + frame["cumulative_pnl"])
 
     wins = frame[frame["pnl"] > 0]
     losses = frame[frame["pnl"] < 0]

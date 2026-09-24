@@ -15,6 +15,21 @@ python backend/run.py
 
 The API runs at `http://127.0.0.1:5001`. Set `ALGORESEARCH_OFFLINE=1` in `.env` to use only the included historical fixtures.
 
+## One-command checks
+
+After setup, use the root `Makefile` targets:
+
+```bash
+make setup
+make check
+```
+
+Run the two local services in separate terminals with `make backend` and `make frontend`, then open `http://127.0.0.1:5173`.
+
+## Deployment
+
+`render.yaml` defines a deployment-ready Flask API and static Vite frontend. Connect this repository to Render, review the generated service URLs, update `CORS_ORIGINS` and `VITE_API_URL` with those URLs, and deploy. The included manifest keeps the demo offline and does not require market-data credentials.
+
 ## Frontend
 
 ```bash

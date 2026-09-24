@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, current_app, jsonify, request
 
 from app.services.market_service import run_classification
 from app.validation.uploads import UploadError, validate_csv_file
@@ -8,6 +8,7 @@ from app.analytics.classification import classify_market
 from app.validation.ohlc import validate_ohlc
 from app.providers.normalize import ohlc_records
 from app.store.research_runs import create_run
+from app.validation.requests import bounded_int, required_symbol
 
 bp = Blueprint("market", __name__)
 
@@ -15,12 +16,12 @@ bp = Blueprint("market", __name__)
 @bp.post("/market/classify")
 def classify():
     payload = request.get_json(silent=True) or {}
-    instrument = (payload.get("instrument") or "NIFTY").strip()
-    analysis_date = payload.get("analysis_date")
-    lookback = int(payload.get("lookback") or 5)
-    source = payload.get("source") or "yahoo"
-    period = payload.get("period") or "6mo"
     try:
+        instrument = required_symbol(payload.get("instrument"))
+        analysis_date = payload.get("analysis_date")
+        lookback = bounded_int(payload.get("lookback"), 5, 3, 250, "lookback")
+        source = payload.get("source") or "yahoo"
+        period = payload.get("period") or "6mo"
         result = run_classification(
             instrument=instrument,
             analysis_date=analysis_date,
@@ -29,7 +30,8 @@ def classify():
             period=period,
         )
     except Exception as exc:  # noqa: BLE001
-        return jsonify({"error": "classification_failed", "message": str(exc)}), 400
+        current_app.logger.exception("Market classification failed", exc_info=exc)
+        return jsonify({"error": "classification_failed", "message": "Unable to complete market classification."}), 400
     return jsonify(result)
 
 
@@ -37,9 +39,9 @@ def classify():
 def classify_csv():
     try:
         content = validate_csv_file(request.files.get("file"))
-        instrument = (request.form.get("instrument") or "CSV").strip()
+        instrument = required_symbol(request.form.get("instrument"), default="CSV")
         analysis_date = request.form.get("analysis_date") or None
-        lookback = int(request.form.get("lookback") or 5)
+        lookback = bounded_int(request.form.get("lookback"), 5, 3, 250, "lookback")
         provider = CSVProvider.from_bytes(content)
         frame = provider.fetch_ohlc(instrument)
         quality = validate_ohlc(frame)
@@ -71,4 +73,5 @@ def classify_csv():
     except UploadError as exc:
         return jsonify({"error": "upload_rejected", "message": str(exc)}), 400
     except Exception as exc:  # noqa: BLE001
-        return jsonify({"error": "classification_failed", "message": str(exc)}), 400
+        current_app.logger.exception("CSV market classification failed", exc_info=exc)
+        return jsonify({"error": "classification_failed", "message": "Unable to classify the uploaded data."}), 400

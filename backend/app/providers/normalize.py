@@ -20,7 +20,7 @@ def normalize_ohlc(df: pd.DataFrame, source: str) -> pd.DataFrame:
     frame = frame.rename(columns=rename)
 
     if "Date" in frame.columns:
-        frame["Date"] = pd.to_datetime(frame["Date"], utc=False, errors="coerce")
+        frame = frame.assign(Date=pd.to_datetime(frame["Date"], utc=False, errors="coerce"))
         frame = frame.dropna(subset=["Date"])
         frame = frame.set_index("Date")
     else:
@@ -29,14 +29,15 @@ def normalize_ohlc(df: pd.DataFrame, source: str) -> pd.DataFrame:
 
     frame.index = pd.DatetimeIndex(frame.index).tz_localize(None)
     frame.index.name = "Date"
+    frame = frame.copy()
 
     for col in REQUIRED_OHLC:
         if col not in frame.columns:
             raise ValueError(f"Missing required column: {col}")
-        frame[col] = pd.to_numeric(frame[col], errors="coerce")
+        frame = frame.assign(**{col: pd.to_numeric(frame[col], errors="coerce")})
 
     if "Volume" in frame.columns:
-        frame["Volume"] = pd.to_numeric(frame["Volume"], errors="coerce")
+        frame = frame.assign(Volume=pd.to_numeric(frame["Volume"], errors="coerce"))
     else:
         frame["Volume"] = pd.NA
 

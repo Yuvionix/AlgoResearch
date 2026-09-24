@@ -27,7 +27,7 @@ def sample_dataset_view() -> dict:
     with SAMPLE_BACKTEST_PATH.open() as handle:
         meta = json.load(handle)
     trades = pd.read_csv(SAMPLE_TRADES_PATH)
-    trades["date"] = pd.to_datetime(trades["date"])
+    trades = trades.assign(date=pd.to_datetime(trades["date"]))
     analysis = analyze_trades(
         trades,
         initial_capital=float(meta["initial_capital"]),
