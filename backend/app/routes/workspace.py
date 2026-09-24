@@ -2,11 +2,13 @@ from flask import Blueprint, current_app, jsonify, request
 
 from app.services.workspace_service import dashboard_summary, execute_workspace
 from app.validation.requests import bounded_int, required_symbol
+from app.routes.auth import auth_required
 
 bp = Blueprint("workspace", __name__)
 
 
 @bp.post("/workspace/execute")
+@auth_required
 def execute():
     payload = request.get_json(silent=True) or {}
     try:

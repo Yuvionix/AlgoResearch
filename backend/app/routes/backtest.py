@@ -9,6 +9,7 @@ from app.services.backtest_service import (
 )
 from app.validation.uploads import UploadError, validate_csv_file
 from app.validation.requests import bounded_int, positive_float
+from app.routes.auth import auth_required
 
 bp = Blueprint("backtest", __name__)
 
@@ -24,6 +25,7 @@ def sample():
 
 
 @bp.post("/backtest/analyze-csv")
+@auth_required
 def analyze_csv():
     try:
         content = validate_csv_file(request.files.get("file"))
@@ -38,6 +40,7 @@ def analyze_csv():
 
 
 @bp.post("/backtest/monte-carlo")
+@auth_required
 def monte_carlo():
     try:
         content = validate_csv_file(request.files.get("file"))
@@ -52,6 +55,7 @@ def monte_carlo():
 
 
 @bp.post("/backtest/compare")
+@auth_required
 def compare():
     payload = request.get_json(silent=True) or {}
     datasets = payload.get("datasets") or ["internship", "sample"]

@@ -49,3 +49,7 @@ npm run build
 ```
 
 The application is for historical research and education. It does not execute trades, connect to a broker, or provide investment advice.
+
+Authentication is available for deployments by setting `AUTH_ENABLED=1`, a strong `SECRET_KEY`, and non-default `AUTH_USERNAME` and `AUTH_PASSWORD`. It remains disabled by default so the included offline demo opens immediately.
+
+Research runs are stored in SQLite at `data/research_runs.sqlite3` and are ignored by Git because they are local runtime state.

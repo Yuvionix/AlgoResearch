@@ -63,8 +63,7 @@ def test_local_provider_rejects_symlink_escape(tmp_path):
         ("/api/scanner/run", {"lookback_days": 999999}),
     ],
 )
-def test_invalid_api_parameters_return_bad_request(path, payload, monkeypatch, tmp_path):
-    monkeypatch.setattr("app.config.RUNS_PATH", tmp_path / "runs.json")
+def test_invalid_api_parameters_return_bad_request(path, payload):
     client = create_app().test_client()
     response = client.post(path, json=payload)
     assert response.status_code == 400

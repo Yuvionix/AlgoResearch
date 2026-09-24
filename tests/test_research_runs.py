@@ -6,8 +6,8 @@ from app.store import research_runs
 
 
 def test_create_and_fetch_run(tmp_path, monkeypatch):
-    path = tmp_path / "runs.json"
-    monkeypatch.setattr(research_runs, "RUNS_PATH", path)
+    path = tmp_path / "runs.sqlite3"
+    monkeypatch.setattr(research_runs, "RUNS_DB_PATH", path)
     run = research_runs.create_run(
         analysis_type="golden_crossover",
         instrument="NIFTY",

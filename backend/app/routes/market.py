@@ -9,11 +9,13 @@ from app.validation.ohlc import validate_ohlc
 from app.providers.normalize import ohlc_records
 from app.store.research_runs import create_run
 from app.validation.requests import bounded_int, required_symbol
+from app.routes.auth import auth_required
 
 bp = Blueprint("market", __name__)
 
 
 @bp.post("/market/classify")
+@auth_required
 def classify():
     payload = request.get_json(silent=True) or {}
     try:
@@ -36,6 +38,7 @@ def classify():
 
 
 @bp.post("/market/classify-csv")
+@auth_required
 def classify_csv():
     try:
         content = validate_csv_file(request.files.get("file"))

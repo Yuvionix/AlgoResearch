@@ -3,6 +3,7 @@ from flask import Blueprint, current_app, jsonify, request
 from app.providers.local import load_universe
 from app.services.scanner_service import scan_universe, symbol_detail
 from app.validation.requests import bounded_int, required_symbol
+from app.routes.auth import auth_required
 
 bp = Blueprint("scanner", __name__)
 
@@ -13,6 +14,7 @@ def universe():
 
 
 @bp.post("/scanner/run")
+@auth_required
 def run():
     payload = request.get_json(silent=True) or {}
     try:

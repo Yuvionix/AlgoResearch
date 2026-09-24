@@ -4,11 +4,13 @@ from app.providers.csv_provider import CSVProvider
 from app.providers.factory import fetch_with_fallback
 from app.validation.ohlc import validate_ohlc
 from app.validation.uploads import UploadError, validate_csv_file
+from app.routes.auth import auth_required
 
 bp = Blueprint("quality", __name__)
 
 
 @bp.post("/data-quality/validate")
+@auth_required
 def validate():
     payload = request.get_json(silent=True) or {}
     symbol = (payload.get("symbol") or "NIFTY").strip()
@@ -34,6 +36,7 @@ def validate():
 
 
 @bp.post("/data-quality/validate-csv")
+@auth_required
 def validate_csv():
     try:
         content = validate_csv_file(request.files.get("file"))

@@ -15,6 +15,7 @@ frontend/.vite/
 *.log
 *.zip
 data/research_runs.json
+data/*.sqlite3
 data/uploads/
 .idea/
 .vscode/
