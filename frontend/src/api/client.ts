@@ -39,6 +39,18 @@ export async function getRuns() {
   return (await api.get("/research-runs")).data;
 }
 
+export async function getAuthState() {
+  return (await api.get("/auth/me")).data;
+}
+
+export async function login(username: string, password: string) {
+  return (await api.post("/auth/login", { username, password })).data;
+}
+
+export async function compareRuns(datasets: string[]) {
+  return (await api.post("/backtest/compare", { datasets })).data;
+}
+
 export async function getSymbolDetail(symbol: string) {
   return (await api.get(`/scanner/symbol/${encodeURIComponent(symbol)}`, { params: { source: "local" } })).data;
 }
