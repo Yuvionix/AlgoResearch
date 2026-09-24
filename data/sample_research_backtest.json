@@ -1,0 +1,8 @@
+{
+  "label": "Sample research dataset (synthetic)",
+  "source": "Bundled sample for analytics-engine demonstration",
+  "synthetic": true,
+  "initial_capital": 200000,
+  "currency": "INR",
+  "caveat": "These trades are a labelled synthetic sample so the P&L, drawdown, and Monte Carlo engines can be exercised. They are not internship results and are not live trading results."
+}

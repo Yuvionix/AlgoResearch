@@ -1,0 +1,5 @@
+import Page from "./_Page";
+
+export default function Backtest() {
+  return <Page kicker="Backtest analytics" title="Evaluate a strategy in context" lede="Upload or select historical trades, then inspect portfolio-level performance and risk."><div className="card"><div className="row"><label className="field">Trade file<input type="file" accept=".csv,.json" /></label><label className="field">Initial capital<input type="number" defaultValue="100000" /></label><button className="btn">Run backtest</button></div></div><div className="grid grid-4" style={{ marginTop: 16 }}><div className="card"><h3>Net P&amp;L</h3><div className="metric">—</div></div><div className="card"><h3>Max drawdown</h3><div className="metric">—</div></div><div className="card"><h3>Trades</h3><div className="metric">—</div></div><div className="card"><h3>Return</h3><div className="metric">—</div></div></div></Page>;
+}

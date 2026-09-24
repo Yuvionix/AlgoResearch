@@ -1,0 +1,27 @@
+{
+  "label": "Internship Backtest Results",
+  "source": "Documented internship report — Algorithmic Trading Internship, Bithub Finance Private Limited",
+  "generated_by_this_application": false,
+  "initial_capital": 200000,
+  "currency": "INR",
+  "transaction_costs_included": true,
+  "notes": "Brokerage, taxes, and slippage were included in the original internship evaluation. AlgoResearch records these yearly figures as documented historical results. It does not regenerate them from a live trade blotter.",
+  "portfolio_description": "Portfolio containing NIFTY and SENSEX expiry-related strategies as evaluated during the internship.",
+  "periods": [
+    {
+      "year": 2024,
+      "profit": 46419,
+      "max_drawdown": 3557
+    },
+    {
+      "year": 2025,
+      "profit": 195621,
+      "max_drawdown": 5765
+    }
+  ],
+  "monte_carlo": {
+    "performed_during_internship": true,
+    "raw_simulation_output_included": false,
+    "message": "Monte Carlo analysis was performed during the internship; raw simulation output is not included in this portfolio reconstruction."
+  }
+}
