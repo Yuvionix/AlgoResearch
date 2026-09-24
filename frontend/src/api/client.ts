@@ -3,6 +3,7 @@ import axios from "axios";
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://127.0.0.1:5001/api",
   timeout: 120000,
+  withCredentials: true,
 });
 
 export async function getDashboard() {

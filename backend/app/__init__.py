@@ -21,7 +21,7 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.secret_key = SECRET_KEY
     app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH
-    CORS(app, origins=CORS_ORIGINS, supports_credentials=False)
+    CORS(app, origins=CORS_ORIGINS, supports_credentials=True)
 
     @app.after_request
     def security_headers(response):
@@ -58,7 +58,7 @@ def create_app() -> Flask:
         ), 413
 
     @app.errorhandler(500)
-    def server_error(err):
-        return jsonify({"error": "server_error", "message": str(err)}), 500
+    def server_error(_err):
+        return jsonify({"error": "server_error", "message": "An internal server error occurred."}), 500
 
     return app
